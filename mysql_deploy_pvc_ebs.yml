@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dbpod1
+  labels:
+    env: testing
+    region: IN
+spec:
+  containers:
+  - name: dbcon1
+    image: mysql:5.7
+    env:
+      - name: MYSQL_ROOT_PASSWORD
+        valueFrom:
+          secretKeyRef:
+             name: mysecure
+             key: rootpass
+      - name: MYSQL_USER
+        value: vimal
+      - name: MYSQL_PASSWORD
+        valueFrom:
+           secretKeyRef:
+             name: mysecure
+             key: userpass
+      - name: MYSQL_DATABASE
+        value: mydb
+    volumeMounts:
+      - name: db-vol1
+        mountPath: /var/lib/mysql
+  volumes:
+  - name: db-vol1
+    persistentVolumeClaim:
+      claimName: ebs-mysql-pv-claim
