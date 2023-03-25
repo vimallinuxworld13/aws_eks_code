@@ -1,0 +1,43 @@
+# Get Worker node IAM Role ARN
+kubectl -n kube-system describe configmap aws-auth
+
+
+
+# Create Policy for EC2 Instances to access Elastic Block Store, and attached to above listed Role:
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AttachVolume",
+        "ec2:CreateSnapshot",
+        "ec2:CreateTags",
+        "ec2:CreateVolume",
+        "ec2:DeleteSnapshot",
+        "ec2:DeleteTags",
+        "ec2:DeleteVolume",
+        "ec2:DescribeInstances",
+        "ec2:DescribeSnapshots",
+        "ec2:DescribeTags",
+        "ec2:DescribeVolumes",
+        "ec2:DetachVolume"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+
+
+
+# Verify ebs-csi pods running
+kubectl get pods -n kube-system
+
+# Deploy EBS CSI Driver (dont use window cmd, this cmd might fail)
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.17"
+
+# help : https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/install.md
+
+
+
