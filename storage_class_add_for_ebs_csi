@@ -3,4 +3,7 @@ kind: StorageClass
 metadata: 
   name: ebs-sc
 provisioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumer 
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  type: gp3
+  fsType: ext4
